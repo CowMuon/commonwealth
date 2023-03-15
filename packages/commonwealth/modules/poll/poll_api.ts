@@ -1,23 +1,24 @@
+import axios from 'axios';
+import { Poll } from '../models/poll';
+
 export async function getPolls(): Promise<Poll[]> {
-  const response = await fetch('/api/polls');
-  const polls = await response.json();
+  const response = await axios.get('/api/polls');
+  const polls = response.data;
   return polls;
 }
 
 export async function getPoll(id: string): Promise<Poll> {
-  const response = await fetch(`/api/polls/${id}`);
-  const poll = await response.json();
+  const response = await axios.get(`/api/polls/${id}`);
+  const poll = response.data;
   return poll;
 }
 
 export async function postVote(id: string, optionId: string): Promise<Poll> {
-  const response = await fetch(`/api/polls/${id}/vote`, {
-    method: 'POST',
+  const response = await axios.post(`/api/polls/${id}/vote`, { optionId }, {
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ optionId }),
   });
-  const poll = await response.json();
+  const poll = response.data;
   return poll;
 }

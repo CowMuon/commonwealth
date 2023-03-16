@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Poll } from '../models/poll';
+import { Poll } from './poll_model';
 
 export async function getPolls(): Promise<Poll[]> {
   const response = await axios.get('/api/polls');

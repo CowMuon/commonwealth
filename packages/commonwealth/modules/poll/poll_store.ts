@@ -1,5 +1,5 @@
 import { atom } from 'jotai';
-import { Poll } from '../models/poll';
+import { Poll } from './poll_model';
 
 // Initialize an empty object for storing polls
 export const pollsAtom = atom<{ [id: string]: Poll }>({});

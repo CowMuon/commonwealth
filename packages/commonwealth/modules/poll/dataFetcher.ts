@@ -1,5 +1,7 @@
 import axios from 'axios';
-import { Poll } from '../models/poll';
+import { Poll } from '../poll_model';
+
+const API_URL = 'https://api.common.xyz';
 
 type FetchDataOptions<T> = {
   url: string;
@@ -13,7 +15,7 @@ type DataFetcherResult<T> =
   | { status: 'error'; data: null; error: Error };
 
 export const fetchPoll = async (pollId: string, selectedOption: string) => {
-  const url = `/api/polls/${pollId}/vote`;
+  const url = `/${pollId}/vote`;
   const data = { optionId: selectedOption };
 
   try {
@@ -33,10 +35,9 @@ export const usePoll = (poll: Poll) => {
     if (!selectedOption) {
       return;
     }
-
-    setSelectedOption(selectedOption);
+  
     setIsSubmitting(true);
-
+  
     const optimisticUpdate = {
       ...poll,
       options: poll.options.map((option) => {
@@ -46,14 +47,14 @@ export const usePoll = (poll: Poll) => {
         return option;
       }),
     };
-
+  
     updatePollState((prevState) => ({
       ...prevState,
       [poll.id]: optimisticUpdate,
     }));
-
+  
     const result: DataFetcherResult<Poll> = await fetchPoll(poll.id, selectedOption.id);
-
+  
     if (result.status === 'error') {
       updatePollState((prevState) => ({
         ...prevState,
@@ -62,9 +63,9 @@ export const usePoll = (poll: Poll) => {
       console.error(result.error);
       // show error toast
     }
-
+  
     setIsSubmitting(false);
-  }, [selectedOption, poll.id, updatePollState, setSelectedOption, setIsSubmitting]);
+  }, [selectedOption, poll.id, updatePollState, setIsSubmitting]);
 
   const handleOptionSelect = useCallback((option) => {
     setSelectedOption(option);
